@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Neverwinter Dye Pack Comparer</title>
+<style>
+table {border-collapse: collapse; color: white; text-align: center; width: 100%;}
+tr.primary {height: 160px;}
+tr.secondary {height: 80px;}
+tr.accent {height: 40px;}
+</style>
+</head>
+<body>
+
+<table>
+  <tr>
+    <th><select id="select1" onchange="setDye(1)"></select></th>
+    <th><select id="select2" onchange="setDye(2)"></select></th>
+    <th><select id="select3" onchange="setDye(3)"></select></th>
+  </tr>
+  <tr class="primary">
+    <td id="primary1">Primary</td>
+    <td id="primary2">Primary</td>
+    <td id="primary3">Primary</td>
+  </tr>
+  <tr class="secondary">
+    <td id="secondary1">Secondary</td>
+    <td id="secondary2">Secondary</td>
+    <td id="secondary3">Secondary</td>
+  </tr>
+  <tr class="accent">
+    <td id="accent1">Accent</td>
+    <td id="accent2">Accent</td>
+    <td id="accent3">Accent</td>
+  </tr>
+</table>
+
+<script>
+var dyePacks = [
+    {itemName: "Blessed Gold Dye Pack", accent: "#392a12", primary: "#b8a559", secondary: "#184a45"},
+    {itemName: "Bluefire Dye Pack", accent: "#90e4ff", primary: "#2a2634", secondary: "#007eff"},
+    {itemName: "Celestial Grace Dye Pack", accent: "#7e7542", primary: "#c6ba9c", secondary: "#3b364d"},
+    {itemName: "Chill Wind Dye Pack", accent: "#5b759e", primary: "#9fb3d4", secondary: "#37465d"},
+    {itemName: "Control Wizard's Dye Pack", accent: "#445459", primary: "#1c2646", secondary: "#1c1c28"},
+    {itemName: "Cruelty of the Dragonflight", accent: "#3c3929", primary: "#040608", secondary: "#b38f52"},
+    {itemName: "Devoted Cleric's Dye Pack", accent: "#ac9369", primary: "#a3bfd8", secondary: "#212b38"},
+    {itemName: "Doomguide Dye Pack", accent: "#3f4b4b", primary: "#171a1c", secondary: "#2a1c15"},
+    {itemName: "Draconic Black Dye Pack", accent: "#a29d89", primary: "#040608", secondary: "#331d19"},
+    {itemName: "Draconic Blue Dye Pack", accent: "#647c77", primary: "#142642", secondary: "#262523"},
+    {itemName: "Draconic Green Dye Pack", accent: "#776d52", primary: "#302a22", secondary: "#31452e"},
+    {itemName: "Draconic Red Dye Pack", accent: "#77736d", primary: "#2f231f", secondary: "#411f1f"},
+    {itemName: "Draconic White Dye Pack", accent: "#461a1a", primary: "#b3bcc5", secondary: "#443f2d"},
+    {itemName: "Dragonslayer's Dye Pack", accent: "#462702", primary: "#601c1d", secondary: "#19212d"},
+    {itemName: "Ebon Darkness Dye Pack", accent: "#1f1c0e", primary: "#040404", secondary: "#423d2f"},
+    {itemName: "Elemental Ember Dye Pack", accent: "#413d31", primary: "#591f0e", secondary: "#9c6026"},
+    {itemName: "Emerald Dragonscale Dye Pack", accent: "#484941", primary: "#213117", secondary: "#1f240e"},
+    {itemName: "Ethereal Skies Dye Pack", accent: "#bcc4cc", primary: "#113662", secondary: "#151a1f"},
+    {itemName: "Gray Wolf Tribe Dye Pack", accent: "#301a1a", primary: "#253d5c", secondary: "#636654"},
+    {itemName: "Great Weapon Fighter's Dye Pack", accent: "#231d0a", primary: "#2d2f34", secondary: "#52423d"},
+    {itemName: "Guardian Fighter's Dye Pack", accent: "#837b5b", primary: "#363d4d", secondary: "#181a1f"},
+    {itemName: "Helmite Dye Pack", accent: "#b7b38e", primary: "#687177", secondary: "#3d3e2e"},
+    {itemName: "High Harvest Dye Pack", accent: "#261208", primary: "#91a8bf", secondary: "#896034"},
+    {itemName: "Hunter Ranger's Dye Pack", accent: "#6b4f23", primary: "#2a1e0f", secondary: "#43592f"},
+    {itemName: "Jungle Cloak Dye Pack", accent: "#0a0b09", primary: "#62622e", secondary: "#1d4916"},
+    {itemName: "Lliira's Night Dye Pack", accent: "#0e2e79", primary: "#812a1c", secondary: "#e5d492"},
+    {itemName: "Many-Arrows Dye Pack", accent: "#1a2224", primary: "#403d31", secondary: "#2d0d07"},
+    {itemName: "Masquerade Dye Pack", accent: "#caaa5e", primary: "#0b1108", secondary: "#cf8a13"},
+    {itemName: "Moon Shadow Dye Pack", accent: "#1a212a", primary: "#020a11", secondary: "#0d1a2a"},
+    {itemName: "Neverwintan Royal Dye Pack", accent: "#6e8789", primary: "#3b2149", secondary: "#41678e"},
+    {itemName: "Nightmare Dye Pack", accent: "#3f3a24", primary: "#040404", secondary: "#2a0a0a"},
+    {itemName: "Pride of the Dragonflight", accent: "#3d3823", primary: "#331d19", secondary: "#110907"},
+    {itemName: "Pride of the Pack", accent: "#150f03", primary: "#a88f69", secondary: "#483216"},
+    {itemName: "Roar of the Pack", accent: "#150f03", primary: "#81725c", secondary: "#2a1b06"},
+    {itemName: "Scourge Warlock's Dye Pack", accent: "#6e80af", primary: "#2f343f", secondary: "#3a212a"},
+    {itemName: "Searing Magma Dye Pack", accent: "#ddb170", primary: "#b3500d", secondary: "#801408"},
+    {itemName: "Sunite Heart Dye Pack", accent: "#baa3af", primary: "#672f60", secondary: "#a87c93"},
+    {itemName: "Swashbuckler Dye Pack", accent: "#706d60", primary: "#260f0f", secondary: "#090c0b"},
+    {itemName: "Sylvan Grove Dye Pack", accent: "#bfae67", primary: "#33462a", secondary: "#543f23"},
+    {itemName: "Treachery of the Dragonflight", accent: "#8b8883", primary: "#171f16", secondary: "#152512"},
+    {itemName: "Trickster Rogue's Dye Pack", accent: "#544938", primary: "#2b2621", secondary: "#121212"},
+    {itemName: "Vanity of the Dragonflight", accent: "#0c0f14", primary: "#0e1b30", secondary: "#13294f"},
+    {itemName: "Veteran Dye Pack", accent: "#716664", primary: "#305283", secondary: "#111b2d"},
+    {itemName: "Winterwolf Dye Pack", accent: "#9cc4df", primary: "#797e83", secondary: "#b3babc"},
+    {itemName: "Bottle of Black Dye", accent: "#040404", primary: "#040404", secondary: "#040404"},
+    {itemName: "Bottle of Blue Dye", accent: "#2a3d67", primary: "#2a3d67", secondary: "#2a3d67"},
+    {itemName: "Bottle of Green Dye", accent: "#264b24", primary: "#264b24", secondary: "#264b24"},
+    {itemName: "Bottle of Pink Dye", accent: "#99526b", primary: "#99526b", secondary: "#99526b"},
+    {itemName: "Bottle of Purple Dye", accent: "#462b59", primary: "#462b59", secondary: "#462b59"},
+    {itemName: "Bottle of Red Dye", accent: "#591a1c", primary: "#591a1c", secondary: "#591a1c"}
+];
+
+function setDye(n) {
+    "use strict";
+    var d = dyePacks[document.getElementById("select" + n).value];
+    document.getElementById("primary" + n).style.backgroundColor = d.primary;
+    document.getElementById("secondary" + n).style.backgroundColor = d.secondary;
+    document.getElementById("accent" + n).style.backgroundColor = d.accent;
+}
+
+function setOptions() {
+    "use strict";
+    var i, option;
+    var length = dyePacks.length;
+    var select1 = document.getElementById("select1");
+    var select2 = document.getElementById("select2");
+    var select3 = document.getElementById("select3");
+    for (i = 0; i < length; i += 1) {
+        option = document.createElement("option");
+        option.text = dyePacks[i].itemName;
+        option.value = i;
+        select1.add(option);
+        select2.add(option.cloneNode(true));
+        select3.add(option.cloneNode(true));
+    }
+    select1.selectedIndex = Math.floor(Math.random() * length);
+    select2.selectedIndex = Math.floor(Math.random() * length);
+    select3.selectedIndex = Math.floor(Math.random() * length);
+    setDye(1);
+    setDye(2);
+    setDye(3);
+}
+
+setOptions();
+</script>
+</body>
+</html>
