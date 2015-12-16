@@ -14,24 +14,24 @@ tr.accent {height: 40px;}
 
 <table>
   <tr>
-    <th><select id="select1" onchange="setDye(1)"></select></th>
-    <th><select id="select2" onchange="setDye(2)"></select></th>
-    <th><select id="select3" onchange="setDye(3)"></select></th>
+    <th><select id="select0" onchange="update()"></select></th>
+    <th><select id="select1" onchange="update()"></select></th>
+    <th><select id="select2" onchange="update()"></select></th>
   </tr>
   <tr class="primary">
+    <td id="primary0">Primary</td>
     <td id="primary1">Primary</td>
     <td id="primary2">Primary</td>
-    <td id="primary3">Primary</td>
   </tr>
   <tr class="secondary">
+    <td id="secondary0">Secondary</td>
     <td id="secondary1">Secondary</td>
     <td id="secondary2">Secondary</td>
-    <td id="secondary3">Secondary</td>
   </tr>
   <tr class="accent">
+    <td id="accent0">Accent</td>
     <td id="accent1">Accent</td>
     <td id="accent2">Accent</td>
-    <td id="accent3">Accent</td>
   </tr>
 </table>
 
@@ -96,38 +96,43 @@ var dyePacks = [
     {itemName: "Samite", accent: "#3b260a", primary: "#5e1f1f", secondary: "#fafffb"}
 ];
 
-function setDye(n) {
+function update() {
     "use strict";
-    var d = dyePacks[document.getElementById("select" + n).value];
-    document.getElementById("primary" + n).style.backgroundColor = d.primary;
-    document.getElementById("secondary" + n).style.backgroundColor = d.secondary;
-    document.getElementById("accent" + n).style.backgroundColor = d.accent;
+    var selected = [];
+    var i;
+    for (i = 0; i < 3; i += 1) {
+        selected[i] = document.getElementById("select" + i).selectedIndex;
+        document.getElementById("primary" + i).style.backgroundColor = dyePacks[selected[i]].primary;
+        document.getElementById("secondary" + i).style.backgroundColor = dyePacks[selected[i]].secondary;
+        document.getElementById("accent" + i).style.backgroundColor = dyePacks[selected[i]].accent;
+    }
+    history.replaceState(null, null, "?" + selected[0] + "," + selected[1] + "," + selected[2]);
 }
 
-function setOptions() {
+function initialize() {
     "use strict";
     var i, option;
-    var length = dyePacks.length;
-    var select1 = document.getElementById("select1");
-    var select2 = document.getElementById("select2");
-    var select3 = document.getElementById("select3");
-    for (i = 0; i < length; i += 1) {
+    var select = [document.getElementById("select0"), document.getElementById("select1"), document.getElementById("select2")];
+    for (i = 0; i < dyePacks.length; i += 1) {
         option = document.createElement("option");
         option.text = dyePacks[i].itemName;
         option.value = i;
-        select1.add(option);
-        select2.add(option.cloneNode(true));
-        select3.add(option.cloneNode(true));
+        select[0].add(option);
+        select[1].add(option.cloneNode(true));
+        select[2].add(option.cloneNode(true));
     }
-    select1.selectedIndex = Math.floor(Math.random() * length);
-    select2.selectedIndex = Math.floor(Math.random() * length);
-    select3.selectedIndex = Math.floor(Math.random() * length);
-    setDye(1);
-    setDye(2);
-    setDye(3);
+    var query = location.search.slice(1).split(",", 3);
+    for (i = 0; i < 3; i += 1) {
+        if (query[i] >= 0 && query[i] < dyePacks.length) {
+            select[i].selectedIndex = query[i];
+        } else {
+            select[i].selectedIndex = Math.random() * dyePacks.length;
+        }
+    }
+    update();
 }
 
-setOptions();
+initialize();
 </script>
 </body>
 </html>
