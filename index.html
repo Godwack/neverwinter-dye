@@ -123,6 +123,7 @@ function initialize() {
     }
     var query = location.search.slice(1).split(",", 3);
     for (i = 0; i < 3; i += 1) {
+        query[i] = parseInt(query[i]);
         if (query[i] >= 0 && query[i] < dyePacks.length) {
             select[i].selectedIndex = query[i];
         } else {
