@@ -99,37 +99,41 @@ var dyePacks = [
 function update() {
     "use strict";
     var selected = [];
-    var i;
-    for (i = 0; i < 3; i += 1) {
+    var i = 0;
+    while (i < 3) {
         selected[i] = document.getElementById("select" + i).selectedIndex;
         document.getElementById("primary" + i).style.backgroundColor = dyePacks[selected[i]].primary;
         document.getElementById("secondary" + i).style.backgroundColor = dyePacks[selected[i]].secondary;
         document.getElementById("accent" + i).style.backgroundColor = dyePacks[selected[i]].accent;
+        i += 1;
     }
     history.replaceState(null, null, "?" + selected[0] + "," + selected[1] + "," + selected[2]);
 }
 
 function initialize() {
     "use strict";
-    var i;
     var option;
     var select = [document.getElementById("select0"), document.getElementById("select1"), document.getElementById("select2")];
-    for (i = 0; i < dyePacks.length; i += 1) {
+    var i = 0;
+    while (i < dyePacks.length) {
         option = document.createElement("option");
         option.text = dyePacks[i].itemName;
         option.value = i;
         select[0].add(option);
         select[1].add(option.cloneNode(true));
         select[2].add(option.cloneNode(true));
+        i += 1;
     }
     var query = location.search.slice(1).split(",", 3);
-    for (i = 0; i < 3; i += 1) {
+    i = 0;
+    while (i < 3) {
         query[i] = parseInt(query[i]);
         if (query[i] >= 0 && query[i] < dyePacks.length) {
             select[i].selectedIndex = query[i];
         } else {
             select[i].selectedIndex = Math.random() * dyePacks.length;
         }
+        i += 1;
     }
     update();
 }
